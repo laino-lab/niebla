@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leire Makina</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --ink: #1a1208;
+  --paper: #f5f0e8;
+  --accent: #c8390a;
+  --gold: #b8860b;
+  --muted: #8a7a68;
+  --border: #d4c9b0;
+  --D: #2d6a2d;
+  --B: #1a4a7a;
+  --A: #8a5a00;
+  --G: #6a3030;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 1rem 4rem;
+}
+
+.masthead {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 600px;
+}
+
+.kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  line-height: 1.05;
+  margin-bottom: 0.6rem;
+}
+
+h1 em { font-style: italic; color: var(--accent); }
+
+.tagline {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* WIZARD */
+.wizard {
+  width: 100%;
+  max-width: 620px;
+}
+
+/* PROGRESS */
+.progress-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 2rem;
+}
+
+.progress-step {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+
+.progress-step.done { background: var(--ink); }
+.progress-step.active { background: var(--accent); }
+
+/* PAUSO */
+.step {
+  display: none;
+  animation: stepIn 0.3s ease;
+}
+
+.step.active { display: block; }
+
+@keyframes stepIn {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.step-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.step-question {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  line-height: 1.3;
+  margin-bottom: 0.4rem;
+}
+
+.step-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* AUKERA KARTAK */
+.cards {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.cards.col2 { grid-template-columns: 1fr 1fr; }
+.cards.col3 { grid-template-columns: repeat(3, 1fr); }
+
+.card {
+  border: 1.5px solid var(--border);
+  background: white;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  width: 100%;
+}
+
+.card:hover { border-color: var(--ink); transform: translateY(-1px); }
+
+.card.selected {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.card-sub {
+  font-size: 0.72rem;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.card.selected .card-sub { color: #aaa; }
+
+/* NOTA EREMUA */
+.eremu-nota {
+  display: none;
+  background: #f0ebe0;
+  border-left: 3px solid var(--gold);
+  padding: 0.6rem 0.9rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.eremu-nota.visible { display: block; }
+
+/* SLIDER */
+.slider-wrap {
+  margin-bottom: 1.5rem;
+}
+
+.slider-row {
+  margin-bottom: 1.25rem;
+}
+
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.3rem;
+}
+
+.slider-lbl {
+  font-size: 0.85rem;
+}
+
+.slider-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.slider-ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+input[type=range] {
+  width: 100%;
+  height: 3px;
+  appearance: none;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--ink);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--ink);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+/* MAILA BOTOIAK */
+.maila-row {
+  margin-bottom: 1.25rem;
+}
+
+.maila-lbl {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.maila-btns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+
+.maila-btn {
+  border: 1.5px solid var(--border);
+  background: white;
+  padding: 0.5rem 0.25rem;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  text-align: center;
+  transition: all 0.15s;
+  color: var(--ink);
+}
+
+.maila-btn:hover { border-color: var(--ink); }
+.maila-btn.sel { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* BOTOIA */
+.nav-btns {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn-next {
+  flex: 1;
+  padding: 0.9rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 0.05em;
+}
+
+.btn-next:hover { background: var(--accent); }
+.btn-next:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+.btn-back {
+  padding: 0.9rem 1.2rem;
+  background: none;
+  border: 1.5px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+
+.btn-back:hover { border-color: var(--ink); color: var(--ink); }
+
+/* EMAITZA */
+#step-result {
+  display: none;
+}
+
+.result-box {
+  border: 3px solid var(--ink);
+  margin-bottom: 1.5rem;
+  animation: stepIn 0.4s ease;
+}
+
+.result-top {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-eredua {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.result-eredua.D { color: var(--D); }
+.result-eredua.B { color: var(--B); }
+.result-eredua.A { color: var(--A); }
+.result-eredua.G { color: var(--G); }
+
+.result-meta {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.result-body {
+  padding: 1.25rem 1.5rem;
+}
+
+.result-datuak {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.datu {
+  background: #f0ebe0;
+  padding: 0.4rem 0.6rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+}
+
+.datu-k { color: var(--muted); }
+.datu-v { font-weight: 500; margin-top: 0.1rem; }
+
+.result-pred {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.result-oharra {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.6;
+  padding: 0.75rem;
+  background: #faf7f0;
+  border-left: 3px solid var(--gold);
+  margin-bottom: 1rem;
+}
+
+.result-claude {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  font-style: italic;
+  padding: 1rem;
+  background: #f0ebe0;
+  border-left: 3px solid var(--accent);
+  min-height: 60px;
+  color: var(--ink);
+}
+
+.btn-reset {
+  width: 100%;
+  padding: 0.9rem;
+  background: none;
+  border: 1.5px solid var(--ink);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--ink);
+  transition: all 0.15s;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.btn-reset:hover { background: var(--ink); color: var(--paper); }
+
+footer {
+  margin-top: 3rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.08em;
+  line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="kicker">Nafarroa · Eskola Publikoa · V1.0</div>
+  <h1>Leire <em>Makina</em></h1>
+  <p class="tagline">Zein hizkuntza-eredu aukeratzen du zure profileko gurasoak?<br>Predikzio hotza. Ez gomendioa.</p>
+</div>
+
+<div class="wizard">
+
+  <!-- PROGRESS -->
+  <div class="progress-bar">
+    <div class="progress-step active" id="ps1"></div>
+    <div class="progress-step" id="ps2"></div>
+    <div class="progress-step" id="ps3"></div>
+    <div class="progress-step" id="ps4"></div>
+    <div class="progress-step" id="ps5"></div>
+  </div>
+
+  <!-- PAUSO 1: EREMUA -->
+  <div class="step active" id="step-1">
+    <div class="step-num">GALDERA 1 / 4</div>
+    <div class="step-question">Non bizi zara?</div>
+    <div class="step-hint">Nafarroako hizkuntza-eremuak administrazioaren araberako banaketa du. Aukeratu zure herria dagoen eremua.</div>
+
+    <div class="cards col3">
+      <button class="card" onclick="sel(this,'eremua','E')">
+        <span class="card-title">Euskalduna</span>
+        <span class="card-sub">Leitza, Baztan, Ultzama, Sakana, Bortziriak...</span>
+      </button>
+      <button class="card" onclick="sel(this,'eremua','M')">
+        <span class="card-title">Mistoa</span>
+        <span class="card-sub">Iruñea, Burlata, Lizarra, Tafalla, Zangoza...</span>
+      </button>
+      <button class="card" onclick="sel(this,'eremua','EE')">
+        <span class="card-title">Ez-euskalduna</span>
+        <span class="card-sub">Tutera, Erribera, Iruñerriko eremu batzuk...</span>
+      </button>
+    </div>
+
+    <div class="eremu-nota" id="eremu-nota"></div>
+
+    <div class="nav-btns">
+      <button class="btn-next" id="btn1" onclick="goStep(2)" disabled>Hurrengoa →</button>
+    </div>
+  </div>
+
+  <!-- PAUSO 2: JATORRIA -->
+  <div class="step" id="step-2">
+    <div class="step-num">GALDERA 2 / 4</div>
+    <div class="step-question">Non jaio zineten?</div>
+    <div class="step-hint">Jatorria eragin dezake hizkuntza-hautuan, batez ere sareko eta kulturako arrazoiengatik.</div>
+
+    <div style="margin-bottom:1rem">
+      <div style="font-size:0.8rem;font-family:'IBM Plex Mono',monospace;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.1em">Guraso A</div>
+      <div class="cards col3">
+        <button class="card selected" onclick="sel(this,'jatA','NAF')"><span class="card-title">Nafarroa</span></button>
+        <button class="card" onclick="sel(this,'jatA','EST')"><span class="card-title">Estatua</span><span class="card-sub">Espainiar estatua, Nafarroatik kanpo</span></button>
+        <button class="card" onclick="sel(this,'jatA','KANPO')"><span class="card-title">Atzerria</span></button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div style="font-size:0.8rem;font-family:'IBM Plex Mono',monospace;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.1em">Guraso B <span style="font-weight:300;font-style:italic">(aukerakoa)</span></div>
+      <div class="cards col3" style="grid-template-columns:repeat(4,1fr)">
+        <button class="card selected" onclick="sel(this,'jatB','NAF')"><span class="card-title">Nafarroa</span></button>
+        <button class="card" onclick="sel(this,'jatB','EST')"><span class="card-title">Estatua</span></button>
+        <button class="card" onclick="sel(this,'jatB','KANPO')"><span class="card-title">Atzerria</span></button>
+        <button class="card" onclick="sel(this,'jatB','NONE')"><span class="card-title" style="color:var(--muted)">—</span><span class="card-sub">Guraso bakarra</span></button>
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goStep(1)">← Atzera</button>
+      <button class="btn-next" onclick="goStep(3)">Hurrengoa →</button>
+    </div>
+  </div>
+
+  <!-- PAUSO 3: EUSKALTZALETASUNA -->
+  <div class="step" id="step-3">
+    <div class="step-num">GALDERA 3 / 4</div>
+    <div class="step-question">Zenbat maite duzue euskara?</div>
+    <div class="step-hint">Ez dakizula edo ez dakizun da gauza bat. Maite duzula edo ez, beste bat. Ezarri zuen sentimendu linguistikoa.</div>
+
+    <div class="slider-wrap">
+      <div class="slider-row">
+        <div class="slider-head">
+          <span class="slider-lbl">Guraso A</span>
+          <span class="slider-val" id="veuA">50</span>
+        </div>
+        <div class="slider-ends"><span>Bost zait</span><span>Maite dut asko</span></div>
+        <input type="range" min="0" max="100" value="50" id="euA"
+               oninput="document.getElementById('veuA').textContent=this.value;st.euA=+this.value">
+      </div>
+
+      <div class="slider-row" id="euB-row">
+        <div class="slider-head">
+          <span class="slider-lbl">Guraso B</span>
+          <span class="slider-val" id="veuB">50</span>
+        </div>
+        <div class="slider-ends"><span>Bost zait</span><span>Maite du asko</span></div>
+        <input type="range" min="0" max="100" value="50" id="euB"
+               oninput="document.getElementById('veuB').textContent=this.value;st.euB=+this.value">
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goStep(2)">← Atzera</button>
+      <button class="btn-next" onclick="goStep(4)">Hurrengoa →</button>
+    </div>
+  </div>
+
+  <!-- PAUSO 4: GAITASUNA -->
+  <div class="step" id="step-4">
+    <div class="step-num">GALDERA 4 / 4</div>
+    <div class="step-question">Zein da zuen euskara maila?</div>
+    <div class="step-hint">Maila erreala, ez nahi duzuna. Euskaldun jaio eta ahaztu baduzu, aukeratu zure egungo maila.</div>
+
+    <div class="maila-row">
+      <span class="maila-lbl">Guraso A</span>
+      <div class="maila-btns" id="mailaA">
+        <button class="maila-btn sel" onclick="setMaila('A','0',this)">0<br><span style="font-size:0.6rem">Ez daki</span></button>
+        <button class="maila-btn" onclick="setMaila('A','A1',this)">A1–A2<br><span style="font-size:0.6rem">Oinarrizkoa</span></button>
+        <button class="maila-btn" onclick="setMaila('A','B1',this)">B1–B2<br><span style="font-size:0.6rem">Funtzionala</span></button>
+        <button class="maila-btn" onclick="setMaila('A','C1',this)">C1–C2<br><span style="font-size:0.6rem">Ondo</span></button>
+      </div>
+    </div>
+
+    <div class="maila-row" id="mailaB-row">
+      <span class="maila-lbl">Guraso B</span>
+      <div class="maila-btns" id="mailaB">
+        <button class="maila-btn sel" onclick="setMaila('B','0',this)">0<br><span style="font-size:0.6rem">Ez daki</span></button>
+        <button class="maila-btn" onclick="setMaila('B','A1',this)">A1–A2<br><span style="font-size:0.6rem">Oinarrizkoa</span></button>
+        <button class="maila-btn" onclick="setMaila('B','B1',this)">B1–B2<br><span style="font-size:0.6rem">Funtzionala</span></button>
+        <button class="maila-btn" onclick="setMaila('B','C1',this)">C1–C2<br><span style="font-size:0.6rem">Ondo</span></button>
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goStep(3)">← Atzera</button>
+      <button class="btn-next" onclick="kalkulatu()">Predikzioa ikusi →</button>
+    </div>
+  </div>
+
+  <!-- EMAITZA -->
+  <div id="step-result">
+    <div class="result-box">
+      <div class="result-top">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.12em;margin-bottom:0.2rem">PREDIKZIOA</div>
+          <div class="result-eredua" id="r-eredua">D</div>
+        </div>
+        <div class="result-meta" id="r-meta"></div>
+      </div>
+      <div class="result-body">
+        <div class="result-datuak" id="r-datuak"></div>
+        <div class="result-pred" id="r-pred"></div>
+        <div class="result-oharra" id="r-oharra"></div>
+        <div class="result-claude" id="r-claude">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted)">Azalpena kargatzen...</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-reset" onclick="reset()">↺ Beste profil bat probatu</button>
+  </div>
+
+</div>
+
+<footer>
+  LEIRE MAKINA · Eduardo Valencia · 2026<br>
+  Eskola publikoa · V1.0 · Predikzio eredua, ez gomendioa<br>
+  Analisi ekonomikoa — sesgorik gabe
+</footer>
+
+<script>
+// ===== EGOERA =====
+const st = {
+  eremua: null,
+  jatA: 'NAF', jatB: 'NAF',
+  euA: 50, euB: 50,
+  mailaA: '0', mailaB: '0',
+  currentStep: 1
+};
+
+const AUKERAK = {
+  E:  ['A','B','D'],
+  M:  ['G','A','B','D'],
+  EE: ['G','A','B','D']
+};
+
+const EREMU_NOTA = {
+  E:  'Eremu euskaldunean: A, B, D ereduak eskuragarri. G eredua ez dago.',
+  M:  'Eremu mistoan: G, A, B, D lau ereduak eskuragarri.',
+  EE: 'Eremu ez-euskaldunean: G, A, B, D lau ereduak eskuragarri.'
+};
+
+const EREDU_IZEN = {
+  D: 'Murgiltze eredua · Euskaraz',
+  B: 'Eredu elebiduna · Bi hizkuntzetan',
+  A: 'Gaztelaniaz · Euskara irakasgai',
+  G: 'Gaztelaniaz · Euskararik gabe'
+};
+
+const MAILA_N = { '0':0, 'A1':25, 'B1':60, 'C1':90 };
+
+// ===== WIZARD =====
+function goStep(n) {
+  document.getElementById(`step-${st.currentStep}`).classList.remove('active');
+  document.getElementById('step-result').style.display = 'none';
+
+  // Progress
+  for (let i = 1; i <= 5; i++) {
+    const ps = document.getElementById(`ps${i}`);
+    ps.classList.remove('active','done');
+    if (i < n) ps.classList.add('done');
+    else if (i === n) ps.classList.add('active');
+  }
+
+  if (n <= 4) {
+    document.getElementById(`step-${n}`).classList.add('active');
+    // Erakutsi/ezkutatu B elementuak
+    if (n === 3 || n === 4) {
+      const noB = st.jatB === 'NONE';
+      const euBrow = document.getElementById('euB-row');
+      const maBrow = document.getElementById('mailaB-row');
+      if (euBrow) euBrow.style.opacity = noB ? '0.3' : '1';
+      if (maBrow) maBrow.style.opacity = noB ? '0.3' : '1';
+    }
+  }
+  st.currentStep = n;
+}
+
+function sel(btn, key, val) {
+  // Deselect siblings
+  btn.closest('.cards').querySelectorAll('.card').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  st[key] = val;
+
+  // Eremua-nota
+  if (key === 'eremua') {
+    const nota = document.getElementById('eremu-nota');
+    nota.textContent = EREMU_NOTA[val];
+    nota.classList.add('visible');
+    document.getElementById('btn1').disabled = false;
+  }
+}
+
+function setMaila(guraso, maila, btn) {
+  document.querySelectorAll(`#maila${guraso} .maila-btn`).forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  st[`maila${guraso}`] = maila;
+}
+
+// ===== LOGIKA =====
+function kalkulatu() {
+  const bakarra = st.jatB === 'NONE';
+  const euMedia = bakarra ? st.euA : (st.euA + st.euB) / 2;
+  const mailaMedia = bakarra
+    ? MAILA_N[st.mailaA]
+    : (MAILA_N[st.mailaA] + MAILA_N[st.mailaB]) / 2;
+
+  const biak_kanpo = st.jatA === 'KANPO' && (bakarra || st.jatB === 'KANPO');
+  const bat_kanpo  = !biak_kanpo && (st.jatA === 'KANPO' || (!bakarra && st.jatB === 'KANPO'));
+
+  // Penalizazioa jatorriarengatik
+  let euEf = euMedia;
+  if (biak_kanpo)  euEf = Math.max(0, euMedia - 25);
+  else if (bat_kanpo) euEf = Math.max(0, euMedia - 10);
+
+  // Eredua
+  let eredua;
+  if (st.eremua === 'E') {
+    if (biak_kanpo && euEf < 40) eredua = 'A';
+    else if (euEf < 30) eredua = 'A';
+    else if (euEf < 60) eredua = 'B';
+    else eredua = 'D';
+  } else if (st.eremua === 'M') {
+    if (biak_kanpo && euEf < 45) eredua = 'G';
+    else if (euEf < 20) eredua = 'G';
+    else if (euEf < 45) eredua = 'A';
+    else if (euEf < 65) eredua = 'B';
+    else eredua = 'D';
+  } else {
+    if (biak_kanpo && euEf < 50) eredua = 'G';
+    else if (euEf < 35) eredua = 'G';
+    else if (euEf < 55) eredua = 'A';
+    else if (euEf < 75) eredua = 'B';
+    else eredua = 'D';
+  }
+
+  // Oharra gaitasunarengatik
+  let oharra = '';
+  if ((eredua==='D'||eredua==='B') && mailaMedia < 25)
+    oharra = '⚠ Gurasoek euskara maila baxua dute. Etxean laguntzeko zailtasunak egon daitezke, baina hori ez da oztopo hautua egiteko. Euskaltegi bat aukera ona da.';
+  else if (eredua==='D' && mailaMedia >= 60)
+    oharra = '✓ Gurasoetako gaitasuna ona da. Profil hau koherentea da D ereduarekin.';
+  else if (eredua==='G' && euMedia > 50)
+    oharra = '⚠ Euskaltzaletasuna handia da, baina profilek G eredua predikatzen dute. Kontsidera ezazu jatorria eta eremua aldagaiek zergatik eragin duten.';
+  else
+    oharra = 'Predikzioa bariable multzoan oinarrituta dago. Kasu indibidualak desbideratu daitezke.';
+
+  erakutsImaitza(eredua, euMedia, euEf, mailaMedia, oharra, biak_kanpo, bat_kanpo, bakarra);
+}
+
+function erakutsImaitza(eredua, euM, euEf, mailaM, oharra, biak_k, bat_k, bakarra) {
+  // Ezkutatu urratsak
+  for (let i = 1; i <= 4; i++) document.getElementById(`step-${i}`).classList.remove('active');
+  document.querySelectorAll('.progress-step').forEach(p => p.classList.replace('active','done') || p.classList.add('done'));
+
+  const res = document.getElementById('step-result');
+  res.style.display = 'block';
+  res.scrollIntoView({ behavior: 'smooth' });
+
+  // Eredua
+  const relEl = document.getElementById('r-eredua');
+  relEl.textContent = eredua;
+  relEl.className = `result-eredua ${eredua}`;
+
+  const eremu_eus = {E:'Euskalduna', M:'Mistoa', EE:'Ez-euskalduna'}[st.eremua];
+  const jat_eus = biak_k ? 'Biak kanpotarrak' : bat_k ? 'Bat kanpotarra' : 'Tokikoak';
+  const maila_eus = mailaM < 15 ? 'Ez daki' : mailaM < 45 ? 'A1–A2' : mailaM < 75 ? 'B1–B2' : 'C1–C2';
+
+  document.getElementById('r-meta').innerHTML =
+    `${EREDU_IZEN[eredua]}<br><br>
+     <span style="color:var(--accent)">${eremu_eus}</span>`;
+
+  document.getElementById('r-datuak').innerHTML = `
+    <div class="datu"><div class="datu-k">Eremua</div><div class="datu-v">${eremu_eus}</div></div>
+    <div class="datu"><div class="datu-k">Jatorria</div><div class="datu-v">${jat_eus}</div></div>
+    <div class="datu"><div class="datu-k">Euskaltzaletasuna</div><div class="datu-v">${Math.round(euM)} / 100</div></div>
+    <div class="datu"><div class="datu-k">Gaitasuna (media)</div><div class="datu-v">${maila_eus}</div></div>
+  `;
+
+  const preds = {
+    D: `Profil honetako gurasoek D eredua aukeratzen dute. Euskaltzaletasun mailak nahikoa pisua du beste faktoreen gainetik.`,
+    B: `Profil honetako gurasoek B eredua aukeratzen dute — aukera orekatua, bi hizkuntzetan.`,
+    A: `Profil honetako gurasoek A eredua aukeratzen dute: gaztelaniaz eskolaratuta, euskara irakasgai gisa.`,
+    G: `Profil honetako gurasoek G eredua aukeratzen dute: euskararik gabeko eskolaratzea.`
+  };
+  document.getElementById('r-pred').textContent = preds[eredua];
+  document.getElementById('r-oharra').textContent = oharra;
+
+  claudeAzaldu(eredua, euM, st.eremua, biak_k, mailaM, eremu_eus, jat_eus);
+}
+
+async function claudeAzaldu(eredua, euM, eremua, biak_k, mailaM, eremu_eus, jat_eus) {
+  const el = document.getElementById('r-claude');
+  const maila_eus = mailaM < 15 ? 'zero (ez daki)' : mailaM < 45 ? 'oinarrizkoa (A1-A2)' : mailaM < 75 ? 'funtzionala (B1-B2)' : 'altua (C1-C2)';
+
+  const prompt = `Nafarroako guraso baten hizkuntza-eredu predikzioa egin da:
+- Eremua: ${eremu_eus}
+- Jatorria: ${jat_eus}  
+- Euskaltzaletasuna: ${Math.round(euM)}/100
+- Gaitasuna: ${maila_eus}
+- Predikzioa: ${eredua} eredua
+
+Idatzi 2-3 esaldi laburrak, ekonomista batek bezala, zergatik den predikzio logikoa. Aipa itzazu ondorioak praktikoak (lan-merkatu sarbidea, mugikortasuna, etorkizuna). Tonua: hotza, analitikoa, baina irakurgarria. Ez aldarrikatu ez eragotzi. Euskaraz edo gaztelaniaz, naturalki.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.find(c => c.type === 'text')?.text || '';
+    el.textContent = text;
+  } catch(e) {
+    el.textContent = 'Azalpen automatikoa ez dago erabilgarri une honetan.';
+  }
+}
+
+function reset() {
+  // Reset egoera
+  st.eremua = null; st.jatA = 'NAF'; st.jatB = 'NAF';
+  st.euA = 50; st.euB = 50; st.mailaA = '0'; st.mailaB = '0';
+
+  // Reset UI
+  document.querySelectorAll('.card').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('[data-val="NAF"]').forEach(b => b.classList.add('selected'));
+  document.getElementById('euA').value = 50; document.getElementById('veuA').textContent = '50';
+  document.getElementById('euB').value = 50; document.getElementById('veuB').textContent = '50';
+  document.querySelectorAll('.maila-btn').forEach(b => b.classList.remove('sel'));
+  document.querySelectorAll('.maila-btns').forEach(g => g.firstElementChild.classList.add('sel'));
+  document.getElementById('eremu-nota').classList.remove('visible');
+  document.getElementById('btn1').disabled = true;
+  document.getElementById('step-result').style.display = 'none';
+
+  goStep(1);
+}
+</script>
+</body>
+</html>
