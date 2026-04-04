@@ -142,23 +142,23 @@ h1.app-h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400
   <p class="sub">ENSEÑANZA PÚBLICA · ZONA MIXTA</p>
   <p class="tagline">La decisión que tomes va a afectar a tus hijos.</p>
   <div class="lang-grid">
-    <button class="lang-btn" id="btn-eus">EUSKARAZ</button>
-    <button class="lang-btn" id="btn-es">CASTELLANO</button>
-    <button class="lang-btn" id="btn-en">ENGLISH</button>
+    <button class="lang-btn" onclick="startLang('eus')">EUSKARAZ</button>
+    <button class="lang-btn" onclick="startLang('es')">CASTELLANO</button>
+    <button class="lang-btn" onclick="startLang('en')">ENGLISH</button>
   </div>
   <div class="lang-grid-2">
-    <button class="lang-btn arab-btn" id="btn-arab">العربية</button>
-    <button class="lang-btn" id="btn-fr">FRANÇAIS</button>
-    <button class="lang-btn" id="btn-ro">ROMÂNĂ</button>
+    <button class="lang-btn arab-btn" onclick="startLang('arab')">العربية</button>
+    <button class="lang-btn" onclick="startLang('fr')">FRANÇAIS</button>
+    <button class="lang-btn" onclick="startLang('ro')">ROMÂNĂ</button>
   </div>
   <div class="lang-grid-3">
-    <button class="lang-btn" id="btn-ca">CATALÀ</button>
-    <button class="lang-btn" id="btn-gl">GALEGO</button>
+    <button class="lang-btn" onclick="startLang('ca')">CATALÀ</button>
+    <button class="lang-btn" onclick="startLang('gl')">GALEGO</button>
   </div>
   <div class="lang-sep"></div>
   <div class="lang-grid-3">
-    <button class="lang-btn zh-btn" id="btn-zh">中文</button>
-    <button class="lang-btn" id="btn-uk">УКРАЇНСЬКА</button>
+    <button class="lang-btn zh-btn" onclick="startLang('zh')">中文</button>
+    <button class="lang-btn" onclick="startLang('uk')">УКРАЇНСЬКА</button>
   </div>
   <p class="lang-note">
     Esta herramienta está disponible en 10 idiomas. El catalán y el gallego se incluyen porque sus hablantes conocen de primera mano lo que significa elegir entre lenguas en España.<br>
@@ -173,7 +173,7 @@ h1.app-h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400
   <div id="galdetegia">
     <div class="gal-q" id="gal-q"></div>
     <div class="opts" id="opts"></div>
-    <button class="calc-btn" id="calc-btn" disabled></button>
+    <button class="calc-btn" id="calc-btn" onclick="kalkulatu()" disabled></button>
   </div>
   <div class="em" id="emaitza">
     <div class="em-k" id="em-k"></div>
@@ -182,7 +182,7 @@ h1.app-h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400
     <div class="diff" id="diff"></div>
     <div class="sec-t" id="lur-tit"></div>
     <div class="lur3" id="lur3"></div>
-    <button class="reset-btn" id="reset-btn"></button>
+    <button class="reset-btn" id="reset-btn" onclick="berriz()"></button>
     <div class="oharrak">
       <div class="oh-tit" id="oh-tit"></div>
       <div id="oh-content"></div>
@@ -562,14 +562,7 @@ function berriz(){
   document.getElementById('calc-btn').disabled=true;
 }
 
-document.addEventListener('DOMContentLoaded',function(){
-  ['eus','es','en','arab','fr','ro','ca','gl','zh','uk'].forEach(function(l){
-    document.getElementById('btn-'+l).addEventListener('click',function(){startLang(l);});
-  });
-  document.getElementById('back-btn').addEventListener('click',goBack);
-  document.getElementById('calc-btn').addEventListener('click',kalkulatu);
-  document.getElementById('reset-btn').addEventListener('click',berriz);
-});
+
 </script>
 </body>
 </html>
