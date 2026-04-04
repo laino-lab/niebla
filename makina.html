@@ -42,6 +42,8 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;
 .lang-btn:hover{background:var(--ink);color:var(--paper);}
 .lang-btn.arab-btn{font-family:'Noto Sans Arabic',sans-serif;
   letter-spacing:0;font-size:1rem;}
+.lang-sub{font-size:0.88rem;color:var(--ink);margin-top:1.5rem;
+  font-family:'Playfair Display',serif;font-style:italic;max-width:360px;}
 
 /* ── APP ── */
 #app{display:none;max-width:580px;margin:0 auto;padding:2.5rem 1.25rem 5rem;}
@@ -87,8 +89,8 @@ h1.app-h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400
 .ek{background:white;border:1.5px solid var(--border);padding:1.1rem 1rem;position:relative;}
 .ek.top{border-width:2px;}
 .ek-tick{position:absolute;top:0.6rem;right:0.7rem;font-size:1rem;color:var(--D);}
-.ek-e{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;
-  text-transform:uppercase;margin-bottom:0.3rem;}
+.ek-e{font-family:'IBM Plex Mono',monospace;font-size:0.9rem;letter-spacing:0.05em;
+  text-transform:uppercase;margin-bottom:0.5rem;font-weight:500;}
 .ek-sol{font-family:'Playfair Display',serif;font-size:1.6rem;line-height:1;margin-bottom:0.2rem;}
 .ek-any{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);}
 
@@ -135,7 +137,7 @@ h1.app-h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400
 <body>
 
 <div id="lang-screen">
-  <h1>Elección de modelo lingüístico<br>en Navarra</h1>
+  <h1>Consecuencias de la elección de modelo lingüístico en Navarra</h1>
   <p>ENSEÑANZA PÚBLICA · ZONA MIXTA</p>
   <div class="lang-grid">
     <button class="lang-btn" id="btn-eus">EUSKARAZ</button>
@@ -143,6 +145,7 @@ h1.app-h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400
     <button class="lang-btn" id="btn-en">ENGLISH</button>
     <button class="lang-btn arab-btn" id="btn-arab">العربية</button>
   </div>
+  <p class="lang-sub">La decisión que tomes va a afectar a tus hijos.</p>
 </div>
 
 <div id="app">
@@ -342,11 +345,15 @@ function kalkulatu(){
   document.getElementById('lur-tit').textContent=t.lurTit;
   document.getElementById('reset-btn').textContent=t.reset;
 
+  const eLabels={
+    eus:'eredua', es:'modelo', en:'model', arab:'نموذج'
+  };
+  const eLabel=eLabels[lang]||'';
   document.getElementById('ek3').innerHTML=['D','A','G'].map(e=>{
     const r={D,A,G}[e],top=r.sol_esperatua===maxS;
     return `<div class="ek${top?' top':''}" style="${top?'border-color:'+COL[e]:''}">
       ${top?'<span class="ek-tick">✓</span>':''}
-      <div class="ek-e" style="color:${COL[e]}">${e}</div>
+      <div class="ek-e" style="color:${COL[e]}">${e} ${eLabel}</div>
       <div class="ek-sol" style="color:${COL[e]}">${fmtS(r.sol_esperatua)}€</div>
       <div class="ek-any">${t.anyurte}</div>
     </div>`;
