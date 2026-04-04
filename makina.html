@@ -153,19 +153,19 @@ h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400;
 <div id="lang-screen">
   <div class="lang-brand">laino</div>
   <div class="lang-grid">
-    <button class="lang-btn" data-lang="eus" onclick="setLang('eus')">
+    <button class="lang-btn" data-lang="eus">
       <span class="lang-name">Euskara</span>
       <span class="lang-native">Euskal Herria</span>
     </button>
-    <button class="lang-btn" data-lang="es" onclick="setLang('es')">
+    <button class="lang-btn" data-lang="es">
       <span class="lang-name">Español</span>
       <span class="lang-native">Castellano</span>
     </button>
-    <button class="lang-btn" data-lang="en" onclick="setLang('en')">
+    <button class="lang-btn" data-lang="en">
       <span class="lang-name">English</span>
       <span class="lang-native">English</span>
     </button>
-    <button class="lang-btn" data-lang="arab" onclick="setLang('arab')">
+    <button class="lang-btn" data-lang="arab">
       <span class="lang-name" style="font-family:'Noto Sans Arabic',sans-serif;">العربية</span>
       <span class="lang-native" style="font-family:'Noto Sans Arabic',sans-serif;">عربي</span>
     </button>
@@ -174,7 +174,7 @@ h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400;
 
 <!-- PANTAILA 2: APP -->
 <div id="app">
-  <button class="lang-back" onclick="goBack()">← <span id="back-txt"></span></button>
+  <button class="lang-back" id="back-btn">← <span id="back-txt"></span></button>
   <span class="brand">laino</span>
   <h1 id="app-h1"></h1>
   <p class="intro" id="app-intro"></p>
@@ -182,7 +182,7 @@ h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400;
   <div id="galdetegia">
     <div class="gal-q" id="gal-q"></div>
     <div class="opts" id="opts"></div>
-    <button class="btn" id="btn-kal" onclick="kalkulatu()" disabled></button>
+    <button class="btn" id="btn-kal" disabled></button>
   </div>
 
   <div class="em" id="emaitza">
@@ -194,7 +194,7 @@ h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400;
       <div class="sec-t" id="lur-tit"></div>
       <div class="lur3" id="lur3"></div>
     </div>
-    <button class="berriz" onclick="berriz()" id="berriz-btn"></button>
+    <button class="berriz" id="berriz-btn"></button>
 
     <div class="oharrak">
       <div class="oh-tit" id="oh-tit"></div>
@@ -362,7 +362,7 @@ function setLang(lang) {
   // Aukerak
   const optsEl = document.getElementById('opts');
   optsEl.innerHTML = t.opts.map(o => `
-    <button class="opt" onclick="sel('${o.k}',this)">
+    <button class="opt" data-kat="${o.k}">
       ${isRTL
         ? `<span><span class="opt-nom">${o.nom}</span><span class="opt-sub">${o.sub}</span></span><div class="opt-dot"></div>`
         : `<div class="opt-dot"></div><span><span class="opt-nom">${o.nom}</span><span class="opt-sub">${o.sub}</span></span>`
@@ -378,6 +378,16 @@ function setLang(lang) {
   document.getElementById('btn-kal').disabled = true;
   document.getElementById('galdetegia').style.display = 'block';
   document.getElementById('emaitza').style.display = 'none';
+
+  // Opt botoiak
+  document.querySelectorAll('.opt').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      sel(this.getAttribute('data-kat'), this);
+    });
+  });
+  document.getElementById('btn-kal').addEventListener('click', kalkulatu);
+  document.getElementById('back-btn').addEventListener('click', goBack);
+  document.getElementById('berriz-btn').addEventListener('click', berriz);
 }
 
 function goBack() {
